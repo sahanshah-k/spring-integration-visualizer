@@ -1,6 +1,37 @@
 (async function(window, document) {
 
+    const loadScript = (src) => {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    };
+
+    const loadStylesheet = (href) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        document.head.appendChild(link);
+    };
+
+    const addBodyStyles = () => {
+        const style = document.createElement('style');
+        style.textContent = `
+                body {
+                    background-color: #121212;
+                }
+            `;
+        document.head.appendChild(style);
+    };
+
      window.renderIntegrationGraph = async function(url, targetDivId) {
+         loadStylesheet('https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+         await loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js');
+         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js');
+         addBodyStyles();
         const targetElement = document.getElementById(targetDivId);
         if (!targetElement) {
             console.error(`Element with ID "${targetDivId}" not found.`);
@@ -130,36 +161,5 @@
             console.error('Error:', error);
         }
     };
-    
-    const loadScript = (src) => {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = src;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-        });
-    };
 
-    const loadStylesheet = (href) => {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = href;
-        document.head.appendChild(link);
-    };
-
-    const addBodyStyles = () => {
-        const style = document.createElement('style');
-        style.textContent = `
-                body {
-                    background-color: #121212;
-                }
-            `;
-        document.head.appendChild(style);
-    };
-
-    loadStylesheet('https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
-    await loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js');
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js');
-    addBodyStyles();
 })(window, document);
